@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo-Video AR</title>
+    <!-- Inclure A-Frame -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <!-- Inclure AR.js pour A-Frame -->
+    <script src="https://rawcdn.githack.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.min.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+
+    <h1>Photo-Video AR Webapp</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="image">Choisir une image :</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <label for="video">Choisir une vidéo :</label>
+        <input type="file" id="video" name="video" accept="video/*" required>
+        <button type="submit">Envoyer</button>
+    </form>
+
+    <!-- Section AR.js -->
+    <a-scene embedded arjs>
+        <a-marker preset="hiro">
+            <a-video src="#videoAsset" width="4" height="2" position="0 1 0"></a-video>
+        </a-marker>
+        <a-assets>
+            <video id="videoAsset" src="assets/default.mp4" autoplay loop></video>
+        </a-assets>
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- Script pour gérer le téléchargement -->
+    <script src="js/upload.js"></script>
+
+</body>
+</html>
