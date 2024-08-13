@@ -8,12 +8,13 @@ document.getElementById('uploadForm').onsubmit = async function(event) {
     formData.append('image', imageFile);
     formData.append('video', videoFile);
 
+    
     try {
-        const response = await fetch('https://localhost/photo-video-ra/public/upload.php', {
+        const response = await fetch('http://localhost/photo-video-ra/public/upload.php', {
             method: 'POST',
             body: formData
         });
-
+        
         const result = await response.json();
         if (result.success) {
             alert('Fichiers téléchargés avec succès !');
@@ -21,6 +22,7 @@ document.getElementById('uploadForm').onsubmit = async function(event) {
         } else {
             alert('Échec du téléchargement.');
         }
+        
     } catch (error) {
         console.error('Erreur:', error);
         alert('Erreur lors du téléchargement.');

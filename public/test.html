@@ -2,21 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AR Video</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/ar.js/master/aframe/build/aframe-ar.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Upload</title>
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <!-- Scène AR.js -->
-    <a-scene embedded arjs>
-        <!-- Marqueur AR utilisant le fichier .patt -->
-        <a-marker type="pattern" url="/uploads/pattern-pexels-lara-stratiychuk-1606923648-27469964.patt">
-            <!-- Lecture de la vidéo associée -->
-            <a-video src="uploads/66bb5aad2b665_35427-407130886_small.mp4" autoplay="true" loop="true" width="1" height="0.5"></a-video>
-        </a-marker>
-
-        <!-- Caméra A-Frame -->
-        <a-entity camera></a-entity>
-    </a-scene>
+<body>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+        Select image to upload:
+        <input type="file" name="image" required>
+        Select video to upload:
+        <input type="file" name="video" required>
+        <button type="submit">Upload File</button>
+    </form>
 </body>
 </html>
