@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
         type: 'pattern',
-        patternUrl: 'assets/pattern/10.patt',  // Assurez-vous que le chemin est correct
+        patternUrl: 'assets/pattern/13.patt',  // Assurez-vous que le chemin est correct
     });
 
     console.log("Contrôles du marker ajoutés.");
