@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
         type: 'pattern',
-        patternUrl: 'assets/pattern/3.patt',
+        patternUrl: 'assets/pattern/10.patt',  // Assurez-vous que le chemin est correct
     });
 
     console.log("Contrôles du marker ajoutés.");
@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
     video.loop = true;
     video.preload = 'auto';
     video.setAttribute('playsinline', 'playsinline');
-    video.muted = false; // Assurez-vous que le son est activé
-    video.autoplay = false; // La vidéo ne doit pas se lancer automatiquement
+    video.muted = false;
+    video.autoplay = false;
 
     video.addEventListener('loadeddata', () => {
         console.log("Vidéo chargée et prête à être jouée.");
@@ -71,11 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
     videoTexture.magFilter = THREE.LinearFilter;
     videoTexture.format = THREE.RGBFormat;
 
-    // Ajuster le plan pour un format portrait (9:16)
-    const videoHeight = 1.6; // Ajustez cette valeur en fonction de vos besoins
-    const videoWidth = videoHeight * (9 / 16);
+    // Ajustement du plan en fonction du ratio de l'image du marker
+    const markerRatio = 4 / 3; // Exemple : si votre image est en ratio 4:3
+    const markerHeight = 1.0; // Définissez une hauteur standard
+    const markerWidth = markerHeight * markerRatio;
 
-    const videoGeometry = new THREE.PlaneGeometry(videoWidth, videoHeight);
+    const videoGeometry = new THREE.PlaneGeometry(markerWidth, markerHeight);
     const videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
     const videoMesh = new THREE.Mesh(videoGeometry, videoMaterial);
 
@@ -87,22 +88,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log("Vidéo ajoutée à la scène.");
 
-    let videoPlaying = false; // Suivi de l'état de lecture de la vidéo
+    let videoPlaying = false;
 
     function render() {
         requestAnimationFrame(render);
         if (arToolkitSource.ready === false) return;
 
         arToolkitContext.update(arToolkitSource.domElement);
-        
+
         // Vérifier si le marker est visible
         if (markerRoot.visible) {
+            console.log("Marker détecté, lancement de la vidéo.");
             if (!videoPlaying) {
                 video.play(); // Démarrer la vidéo si elle n'est pas encore en lecture
                 videoPlaying = true;
                 console.log("Vidéo démarrée.");
             }
         } else {
+            console.log("Marker non détecté.");
             if (videoPlaying) {
                 video.pause(); // Mettre la vidéo en pause si le marker n'est plus visible
                 videoPlaying = false;
