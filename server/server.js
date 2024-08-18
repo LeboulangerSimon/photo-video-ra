@@ -1,14 +1,13 @@
 const express = require('express');
 const path = require('path');
-const multer = require('multer');
 const mongoose = require('mongoose');
-require('dotenv').config();
 
-const Association = require('./models/Association'); // Importer le modèle Association
+const Association = require('./models/Association'); // Importation du modèle Association
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Connexion à MongoDB
 mongoose.connect('mongodb://localhost:27017/ra', {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -16,54 +15,44 @@ mongoose.connect('mongodb://localhost:27017/ra', {
 .then(() => console.log('Connecté à MongoDB'))
 .catch(err => console.error('Erreur de connexion à MongoDB:', err));
 
+// Middleware pour traiter les données JSON et URL-encoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Middleware pour servir les fichiers statiques
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Configuration de Multer pour les téléchargements de fichiers
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const dir = `server/uploads/${req.body.pin}`;
-        cb(null, dir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
+// Route pour valider le code PIN
+app.post('/validate-pin', async (req, res) => {
+    console.log("Contenu du body reçu par le serveur:", req.body);  // Vérification que le PIN est reçu
 
-const upload = multer({ storage: storage });
-
-// Route pour la page d'accueil
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/accueil.html'));
-});
-
-// Route pour les téléchargements de fichiers et création d'associations
-app.post('/upload', upload.fields([{ name: 'photo', maxCount: 1 }, { name: 'video', maxCount: 1 }]), async (req, res) => {
     const { pin } = req.body;
 
-    // Vérifier si le PIN existe déjà
+    if (!pin) {
+        console.log("PIN manquant dans la requête");
+        return res.status(400).json({ message: 'Code PIN invalide' });
+    }
+
     const existingAssociation = await Association.findOne({ pin });
-    if (existingAssociation) {
-        return res.status(400).send('Ce code PIN est déjà utilisé, veuillez en choisir un autre.');
+    if (!existingAssociation) {
+        console.log("PIN invalide ou non trouvé:", pin);
+        return res.status(400).json({ message: 'Code PIN invalide' });
     }
 
-    const files = req.files;
-    if (!files.photo || !files.video) {
-        return res.status(400).send('Photo et vidéo sont requises.');
+    console.log("PIN valide:", pin);
+    res.json({ pin });
+});
+
+// Route pour récupérer les associations (facultatif pour l'instant)
+app.get('/get-associations', async (req, res) => {
+    const { pin } = req.query;
+
+    const existingAssociation = await Association.findOne({ pin });
+    if (!existingAssociation) {
+        return res.status(400).json({ message: 'Aucune association trouvée pour ce PIN' });
     }
 
-    const photoPath = files.photo[0].path;
-    const videoPath = files.video[0].path;
-
-    const association = new Association({ pin, photos: [photoPath], videos: [videoPath] });
-
-    try {
-        await association.save();
-        res.json({ message: 'Fichiers téléchargés avec succès !', pin });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Erreur lors de la création de l\'association.');
-    }
+    res.json(existingAssociation);
 });
 
 // Démarrage du serveur

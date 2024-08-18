@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil - Upload de Fichiers</title>
+    <title>Accueil - Entrée du Code PIN</title>
 </head>
 <body>
-    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+    <h1>Bienvenue !</h1>
+    <form id="pinForm" action="/validate-pin" method="post">
         <input type="text" name="pin" placeholder="Entrez votre PIN" required maxlength="4">
-        <label for="photo">Sélectionnez une photo :</label>
-        <input type="file" name="photo" accept="image/*" required>
-        <label for="video">Sélectionnez une vidéo :</label>
-        <input type="file" name="video" accept="video/*" required>
-        <button type="submit">Télécharger</button>
+        <button type="submit">Valider</button>
     </form>
-    <div id="pinMessage"></div>
+    <div id="errorMessage"></div>
+    
+    <div id="errorMessage"></div>
 
     <!-- Lien vers le fichier JavaScript -->
     <script src="scripts/accueil.js"></script>

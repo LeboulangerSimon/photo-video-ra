@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo-Video-RA</title>
+    <title>Accueil - Entrée du Code PIN</title>
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/build/ar-threex.js"></script>
-    <script src="script.js"></script>
+    <h1>Bienvenue !</h1>
+    <form id="pinForm" action="/validate-pin" method="post">
+        <input type="text" name="pin" placeholder="Entrez votre PIN" required maxlength="4">
+        <button type="submit">Valider</button>
+    </form>
+    <div id="errorMessage"></div>
+
+    <!-- Lien vers le fichier JavaScript -->
+    <script src="scripts/accueil.js"></script>
 </body>
 </html>
